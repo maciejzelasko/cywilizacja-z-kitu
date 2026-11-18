@@ -1,0 +1,7 @@
+services:
+  cywilizacja:
+    build: .
+    image: cywilizacja-z-kitu:latest
+    ports:
+      - "8080:80"
+    restart: unless-stopped
