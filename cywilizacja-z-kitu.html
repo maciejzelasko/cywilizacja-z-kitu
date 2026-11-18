@@ -48,7 +48,7 @@ kbd{font-family:var(--body);font-size:11px;border:1px solid var(--line);border-b
 .card{max-width:960px;width:100%;display:flex;flex-direction:column;gap:16px}
 .card p{max-width:62ch;color:var(--muted);line-height:1.55;margin:0}
 .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
-.facs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.facs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
 .fc{display:flex;flex-direction:column;gap:8px;text-align:left;padding:0 0 14px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));overflow:hidden;transition:transform .15s,border-color .15s}
 .fc:hover{transform:translateY(-3px);border-color:var(--c)}
 .fc canvas{width:100%;height:auto;display:block;background:linear-gradient(180deg,#3a3355,#c98a63);}
@@ -104,7 +104,7 @@ kbd{border:0;box-shadow:inset 0 0 0 2px var(--line);padding:1px 6px}
 <div class="overlay" id="start">
   <div class="card">
     <h1>Cywilizacja z Kitu</h1>
-    <p>Dwa miasta, jedna droga, zero kompromisu. Wysyłaj wojsko, zajmuj farmy i kopalnie, rozwal mur przeciwnika i wprowadź piechotę do jego miasta. Kampania to trzy misje, po jednej przeciw każdej z pozostałych frakcji.</p>
+    <p>Dwa miasta, jedna droga, zero kompromisu. Wysyłaj wojsko, zajmuj farmy i kopalnie, rozwal mur przeciwnika i wprowadź piechotę do jego miasta. Kampania to cztery misje, po jednej przeciw każdej z pozostałych frakcji.</p>
     <div class="lbl">Wybierz frakcję</div>
     <div class="facs" id="facs"></div>
   </div>
@@ -149,8 +149,11 @@ const FAC=[
   city:'Wolnogród',leader:{name:'Wąsaty Elektryk',abil:'Strajk!',desc:'wróg staje na 5 s, jego dochód na 12 s',quote:'Jestem za, a nawet przeciw!'},brief:'Komitet okopał się za barykadą. W szeregach weterani z doświadczeniem od lat 80.: zomowcy z pałami, ormowcy na WSK-ach i starzy ubecy z teczką na każdego. Mur wytrzyma o połowę więcej.'},
  {name:'Eurokołhoźnicy',col:'#f2c230',incMul:1.3,perk:'Dopłaty: +30% dochodu. Formularz w 12 kopiach.',arty:'Ostrzał Dyrektywami',sigil:'★',
   units:{inf:'Hipster z Kijkiem do Selfie',ranged:'Klientka z Latte na Wynos',heavy:'Korpo na Hulajnodze',siege:'Kombajn Biurokracji'},
-  city:'Brukselka',leader:{name:'Pan z Brukseli',abil:'Fundusze Unijne',desc:'+150 do skarbca i leczenie armii',quote:'Pieniądze są. Wnioski też będą.'},brief:'Eurokołhoźnicy finansują armię z dopłat. Prosto z kawiarni ruszają hipsterzy z kijkami do selfie i klientki z latte na owsianym, po trzecim flat white. Dochód rośnie szybciej niż kolejka po kawę.'}];
-const SKIN=['#7db356','#9c9aab','#f1c9a5','#e9b88e'];
+  city:'Brukselka',leader:{name:'Pan z Brukseli',abil:'Fundusze Unijne',desc:'+150 do skarbca i leczenie armii',quote:'Pieniądze są. Wnioski też będą.'},brief:'Eurokołhoźnicy finansują armię z dopłat. Prosto z kawiarni ruszają hipsterzy z kijkami do selfie i klientki z latte na owsianym, po trzecim flat white. Dochód rośnie szybciej niż kolejka po kawę.'},
+ {name:'Front Gaśnicowy',col:'#e43b44',artyRes:.5,perk:'Wszystko zgaszone: wroga artyleria zadaje o połowę mniej obrażeń.',arty:'Ostrzał Pianą',sigil:'!',
+  units:{inf:'Gaśniczy z Gaśnicą',ranged:'Ochotnik z Pianą',heavy:'Husarz z Gaśnicą',siege:'Wóz Strażacki Prawdy'},
+  city:'Gaśnicowo',leader:{name:'Poseł z Gaśnicą',abil:'Wielkie Gaszenie',desc:'piana na froncie: 25 obrażeń wrogom i +20 s do ich artylerii',quote:'Wszystko jest prowokacją!'},
+  brief:'Front Gaśnicowy gasi wszystko, co się świeci: ogniska, latarnie, choinki i dobry nastrój. Husaria jeździ z gaśnicami, a wóz strażacki tryska pianą prawdy. Ich miasto jest w pełni ognioodporne, ich przywódca też.'}];
 
 let G=null,camp=null;
 const cost=(f,k)=>Math.round(KIND[k].cost*(FAC[f].costMul||1));
@@ -164,10 +167,10 @@ function newMission(){
   const m=camp.m,enemy=camp.order[m];
   const mk=(s,f)=>({f,gold:60,cool:8,next:'inf',lead:30,buff:0,frozen:0,noInc:0,cityX:s?WORLD-90:90,wall:{x:s?WORLD-430:430,hp:600*(FAC[f].wallMul||1),max:600*(FAC[f].wallMul||1),cd:0}});
   G={m,S:[mk(0,camp.me),mk(1,enemy)],units:[],shots:[],vis:[],parts:[],cam:0,aim:false,over:false,t:0,uid:0,ticker:'',shake:0,
-     diff:[.85,1,1.15][m],
+     diff:.85+.12*m,
      pts:[{x:780,type:'farm'},{x:1020,type:'mine'},{x:1380,type:'mine'},{x:1620,type:'farm'}].map(p=>({...p,owner:-1,prog:0}))};
   $('#hudFac').textContent=FAC[camp.me].name;$('#hudFac').style.color=FAC[camp.me].col;
-  $('#hudMission').textContent=`Misja ${m+1}/3 · ${FAC[enemy].name}`;
+  $('#hudMission').textContent=`Misja ${m+1}/${camp.order.length} · ${FAC[enemy].name}`;
   buildControls();log(`${FAC[camp.me].name} wyruszają z miasta ${FAC[camp.me].city}. Cel: ${FAC[enemy].city}.`);
 }
 function income(s){const S=G.S[s];if(S.noInc>0)return 0;return (4+2*G.pts.filter(p=>p.owner==s&&p.type=='farm').length)*(FAC[S.f].incMul||1)*(s?G.diff:1)}
@@ -199,7 +202,7 @@ function hit(u,t){
   const dmg=K.dmg*(FAC[G.S[u.s].f].atk||1)*(G.S[u.s].buff>0?1.5:1)*(u.big?2:1)*(isWall?(K.wallMul||1):(K.unitMul||1));
   t.hp-=dmg;u.at=0;
   const ty=isWall?FLOOR-50:unitY(t)-22;
-  if(K.range>60){G.vis.push({type:u.k=='siege'?(G.S[u.s].f==2?'water':'boulder'):u.k=='ranged'&&G.S[u.s].f==2?'folder':u.k=='ranged'&&G.S[u.s].f==3?'cup':'missile',f:G.S[u.s].f,x0:u.x,y0:unitY(u)-30,x1:t.x,y1:ty,t:0,dur:u.k=='siege'?.6:.35})}
+  if(K.range>60){G.vis.push({type:G.S[u.s].f==4?'foam':u.k=='siege'?(G.S[u.s].f==2?'water':'boulder'):u.k=='ranged'&&G.S[u.s].f==2?'folder':u.k=='ranged'&&G.S[u.s].f==3?'cup':'missile',f:G.S[u.s].f,x0:u.x,y0:unitY(u)-30,x1:t.x,y1:ty,t:0,dur:u.k=='siege'?.6:.35})}
   burst(t.x,ty,isWall?'#cbbfa8':'#ffe2a0',isWall?8:5,isWall?120:90);
   text(t.x,ty-10,Math.round(dmg));
   if(isWall&&t.hp<=0){t.hp=0;G.shake=10;burst(t.x,FLOOR-40,'#9a8f7c',40,260,'debris');log(`Mur frakcji ${FAC[G.S[1-u.s].f].name} runął! Rzecznik zapewnia, że to był mur tymczasowy.`)}
@@ -233,8 +236,9 @@ function step(dt){
     if(e){e.hp-=6;w.cd=1.5;G.vis.push({type:'missile',f:G.S[s].f,x0:w.x,y0:FLOOR-100,x1:e.x,y1:unitY(e)-22,t:0,dur:.35});text(e.x,unitY(e)-40,6)}
   }
   for(const sh of G.shots){sh.t+=dt;if(sh.t>=1&&!sh.done){sh.done=true;
-    for(const e of G.units)if(e.s!=sh.s&&Math.abs(e.x-sh.x1)<50){e.hp-=45;text(e.x,unitY(e)-40,45,true)}
-    const w=G.S[1-sh.s].wall;if(w.hp>0&&Math.abs(w.x-sh.x1)<50)w.hp=Math.max(0,w.hp-30);
+    const res=FAC[G.S[1-sh.s].f].artyRes||1;
+    for(const e of G.units)if(e.s!=sh.s&&Math.abs(e.x-sh.x1)<50){e.hp-=45*res;text(e.x,unitY(e)-40,Math.round(45*res),true)}
+    const w=G.S[1-sh.s].wall;if(w.hp>0&&Math.abs(w.x-sh.x1)<50)w.hp=Math.max(0,w.hp-30*res);
     G.shake=Math.max(G.shake,8);
     burst(sh.x1,FLOOR-6,'#ffb347',26,240);burst(sh.x1,FLOOR-6,'#5a4a3a',18,200,'debris');
     for(let i=0;i<14;i++)G.parts.push({x:sh.x1+rnd(-30,30),y:FLOOR-10,vx:rnd(-20,20),vy:rnd(-40,-15),life:1.6,max:1.6,col:'rgba(60,55,60,.55)',size:rnd(10,20),type:'smoke'});
@@ -272,6 +276,7 @@ function useLeader(s){
   if(S.f==1){const u=mine.filter(u=>!u.big).sort((a,b)=>(b.x-a.x)*dirOf(s))[0];u.big=true;u.max=KIND[u.k].hp*3;u.hp=u.max;burst(u.x,unitY(u)-30,FAC[S.f].col,40,200,'confetti')}
   if(S.f==2){E.frozen=5;E.noInc=12}
   if(S.f==3){S.gold+=150;for(const u of mine)u.hp=Math.min(u.max||KIND[u.k].hp,u.hp+30)}
+  if(S.f==4){E.cool+=20;for(const u of G.units)if(u.s!=s){u.hp-=25;text(u.x,unitY(u)-40,25);burst(u.x,unitY(u)-20,'#ffffff',8,90,'confetti')}}
   G.banner={f:S.f,t:0};log(`${L.name}: „${L.quote}” ${L.abil}`);
   return true;
 }
@@ -279,7 +284,7 @@ function win(s){
   G.over=true;const me=s==0,enemy=camp.order[camp.m];
   $('#end').hidden=false;$('#endBtns').innerHTML='';
   const btn=(t,fn,on)=>{const b=document.createElement('button');b.textContent=t;b.className=on?'btn':'btn ghost';b.onclick=fn;$('#endBtns').append(b)};
-  if(me&&camp.m==2){$('#endTitle').textContent='Kampania wygrana!';$('#endText').textContent=`${FAC[camp.me].name} rządzą wszystkimi trzema stolicami. Pierwsza decyzja: powołać komisję do spraw świętowania. Druga: rozwiązać komisję.`;btn('Nowa kampania',menu,true)}
+  if(me&&camp.m==camp.order.length-1){$('#endTitle').textContent='Kampania wygrana!';$('#endText').textContent=`${FAC[camp.me].name} rządzą wszystkimi stolicami. Pierwsza decyzja: powołać komisję do spraw świętowania. Druga: rozwiązać komisję.`;btn('Nowa kampania',menu,true)}
   else if(me){$('#endTitle').textContent='Miasto zdobyte!';$('#endText').textContent=`${FAC[enemy].city} jest wasze. ${FAC[enemy].name} wydają oświadczenie, że i tak go nie chcieli.`;btn('Następna misja',()=>{camp.m++;showBrief()},true);btn('Menu',menu)}
   else{$('#endTitle').textContent='Klęska';$('#endText').textContent=`Wróg wszedł do miasta ${FAC[camp.me].city}. ${FAC[camp.me].name} przechodzą do opozycji pozaparlamentarnej.`;btn('Spróbuj jeszcze raz',showBrief,true);btn('Menu',menu)}
 }
@@ -305,16 +310,19 @@ function weapon(c,f,k,hx,hy,r){
     if(f==1){c.fillStyle='#4f4b63';c.beginPath();c.moveTo(-2,5);c.lineTo(2,5);c.lineTo(5,-16);c.lineTo(-5,-16);c.fill();circ(c,0,-18,6,'#6b6782');for(const a of[0,1.2,2.4,3.6,4.8])poly(c,[Math.cos(a)*5,-18+Math.sin(a)*5,Math.cos(a+.3)*10,-18+Math.sin(a+.3)*10,Math.cos(a+.6)*5,-18+Math.sin(a+.6)*5],'#6b6782')}
     if(f==2){line(c,0,6,0,-24,2.8,'#1b1b1b');line(c,0,6,0,1,3.4,'#3a3a3a')}
     if(f==3){line(c,0,6,0,-26,1.6,'#9aa0a8');c.fillStyle='#1a1a1a';c.beginPath();c.roundRect(-3.5,-34,7,11,1.5);c.fill();c.fillStyle='rgba(140,200,255,.8)';c.fillRect(-2.5,-33,5,8)}
+    if(f==4){c.fillStyle=lg(c,-4,0,4,0,'#a22633','#e43b44','#a22633');c.beginPath();c.roundRect(-4,-21,8,17,3);c.fill();c.fillStyle='#181425';c.fillRect(-2,-24,4,3);c.fillStyle='#ead4aa';c.fillRect(-3,-15,6,4);line(c,1,-23,6,-16,1.4,'#181425')}
   }else if(k=='ranged'){
     if(f==0){c.strokeStyle='#6b4423';c.lineWidth=2.6;c.beginPath();c.arc(-2,0,14,-1.25,1.25);c.stroke();line(c,2.5,-13,2.5,13,.8,'#ddd');line(c,-14,0,8,0,1.4,'#4a3220');poly(c,[8,-2.5,13,0,8,2.5],'#bbb')}
     if(f==1)poly(c,[-4,-2,-1,-7,5,-6,6,0,2,4,-3,3],'#7d786d');
     if(f==2){c.fillStyle='#a8784a';c.beginPath();c.roundRect(-6,-9,13,10,1.5);c.fill();c.fillStyle='#fdfbf4';c.fillRect(-3,-7,7,3);line(c,7,-4,9,-2,.8,'#5a3a1e')}
     if(f==3){c.fillStyle='#f4f1ea';c.beginPath();c.moveTo(-3.5,-10);c.lineTo(3.5,-10);c.lineTo(2.6,1);c.lineTo(-2.6,1);c.fill();c.fillStyle='#8a5a34';c.fillRect(-3.2,-6,6.4,3);c.fillStyle='#e8e4da';c.fillRect(-4,-12,8,2.2)}
+    if(f==4){c.fillStyle=lg(c,0,-4,0,4,'#e43b44','#a22633');c.beginPath();c.roundRect(-3,-4,16,8,3);c.fill();c.fillStyle='#181425';c.fillRect(-5,-2,2,4);line(c,13,0,19,-2,1.8,'#181425');c.fillStyle='#ead4aa';c.fillRect(3,-2,5,4)}
   }else if(k=='lance'){
     if(f==0){line(c,-10,0,30,0,2.6,'#5a3a1e');poly(c,[30,-3.5,39,0,30,3.5],'#c9ced6');line(c,-10,0,-14,-4,1.5,'#b33');line(c,-10,0,-14,4,1.5,'#b33')}
     if(f==1){line(c,-2,0,16,-2,3.4,'#3d3a4d');circ(c,16,-2,2.5,'#c2405a')}
     if(f==2){line(c,-2,0,18,-3,2.8,'#1b1b1b')}
     if(f==3){c.fillStyle='#1a1a1a';c.beginPath();c.roundRect(-1,-6,6,10,1.5);c.fill();c.fillStyle='rgba(140,200,255,.8)';c.fillRect(0,-5,4,7)}
+    if(f==4){line(c,-10,0,34,0,2.4,'#b86f50');poly(c,[34,-2,40,0,34,2],'#c0cbdc');poly(c,[22,-1,33,-1,28,-8],'#ffffff');poly(c,[22,-1,28,-1,28,-8],'#e43b44')}
   }else if(k=='log'){
     c.fillStyle=lg(c,0,-7,0,7,'#9a6e44','#5d3f24');c.beginPath();c.roundRect(-18,-6,40,12,6);c.fill();
     c.strokeStyle='rgba(50,30,15,.5)';c.lineWidth=1;for(const x of[-8,4,14]){c.beginPath();c.moveTo(x,-5);c.lineTo(x+3,5);c.stroke()}
@@ -430,7 +438,34 @@ function hip(c,f,k,ph,mov,at,up){
   poly(c,[hx+6,hy-.5,hx+7.4,hy+1.5,hx+6,hy+2],shade(skin,-.15));
   arm(c,3+lx,sy+2,k,l,13,4.2,coat,f,skin);
 }
-const FIG=[orc,putty,kod,hip];
+// --- Front Gaśnicowy: panowie w garniturach z gaśnicami, ochotnicy w hełmach, husaria ---
+function gas(c,f,k,ph,mov,at,up){
+  const l=lungeOf(at),hus=k=='lance',vol=k=='ranged',skin='#efc4a0';
+  const suit=hus?'#8b9bb4':vol?'#3e2731':'#262b44',pants=vol?'#3e2731':'#181425';
+  const sw=mov?Math.sin(ph)*.5:0,bob=mov?Math.abs(Math.cos(ph))*1.3:0,hip=-17-bob,lx=l*2.5,sy=hip-17;
+  if(!up)for(const s of[-1,1]){const fx=Math.sin(sw*s)*8;line(c,0,hip,fx,-3,4.6,s>0?shade(pants,-.1):pants);c.fillStyle='#0e0c14';c.beginPath();c.roundRect(fx-2.5,-5,8,4.5,[2,3,1,1]);c.fill()}
+  if(hus){ // skrzydła husarskie
+    c.strokeStyle='#733e39';c.lineWidth=2.2;c.beginPath();c.moveTo(-5,sy+8);c.quadraticCurveTo(-16,sy-12,-5,sy-30);c.stroke();
+    for(let i=0;i<8;i++){const a=i/7,px=-5-Math.sin(a*Math.PI)*11,py=sy+8-a*38;poly(c,[px,py,px-7,py-2,px-1,py-5],i%2?'#ffffff':'#c0cbdc')}
+  }
+  if(k!='push')line(c,-2+lx,sy+3,-5+lx-Math.sin(sw)*4,sy+16,5,shade(suit,-.25));
+  c.fillStyle=lg(c,-8,0,9,0,shade(suit,-.25),suit,shade(suit,-.1));
+  c.beginPath();c.moveTo(-7+lx,sy);c.lineTo(7+lx,sy);c.lineTo(8+lx*.5,hip+3);c.lineTo(-8+lx*.5,hip+3);c.closePath();c.fill();
+  if(hus){line(c,-5+lx,sy+4,4+lx,sy+12,1.2,'#ffffff');c.fillStyle='#a22633';c.fillRect(-7+lx,hip-3,15,3)}
+  else{poly(c,[-2+lx,sy,4+lx,sy,1+lx,sy+8],'#ffffff');poly(c,[lx,sy+1,2+lx,sy+1,2.6+lx,sy+10,1+lx,sy+12,-.6+lx,sy+10],'#e43b44')}
+  if(vol){c.fillStyle='#fee761';c.fillRect(-7+lx,sy+12,15,2);c.fillRect(-7+lx,hip-1,15,2)}
+  const hx=2+lx*1.2,hy=sy-8;
+  c.fillStyle=lg(c,0,hy-7,0,hy+6,shade(skin,.12),skin);c.beginPath();c.arc(hx,hy,6.3,0,7);c.fill();
+  c.fillStyle='#5a4a42';c.beginPath();c.moveTo(hx-5,hy+1);c.quadraticCurveTo(hx+1,hy+10,hx+6.5,hy+2);c.lineTo(hx+5,hy+4.5);c.quadraticCurveTo(hx+1,hy+6.5,hx-3,hy+3);c.fill(); // krótka broda
+  if(vol){c.fillStyle='#feae34';c.beginPath();c.ellipse(hx,hy-4.5,10,2.4,0,0,7);c.fill();c.beginPath();c.arc(hx,hy-4.5,6.4,Math.PI,0);c.fill();line(c,hx-4,hy-10,hx+4,hy-10.5,2,'#d77643')}
+  else if(hus){c.fillStyle='#c0cbdc';c.beginPath();c.arc(hx,hy-3,7,Math.PI,0);c.fill();line(c,hx+4,hy-3,hx+5,hy+3,1.4,'#8b9bb4');line(c,hx-1,hy-10,hx-5,hy-16,2,'#e43b44')}
+  else{c.fillStyle='#3e2731';c.beginPath();c.arc(hx-.5,hy-1.5,6.6,Math.PI*1.05,Math.PI*1.9);c.fill();c.fillRect(hx-6,hy-4,2,5)}
+  c.strokeStyle='#181425';c.lineWidth=.9;c.beginPath();c.arc(hx+3.4,hy-.8,2.2,0,7);c.stroke();circ(c,hx+3.4,hy-.8,.8,'#181425');
+  line(c,hx+1.5,hy-3.6,hx+5.5,hy-2.6,1.3,'#3e2731');
+  poly(c,[hx+6,hy-.5,hx+7.6,hy+1.5,hx+6,hy+2],shade(skin,-.15));
+  arm(c,3+lx,sy+2,k,l,13,4.8,suit,f,skin);
+}
+const FIG=[orc,putty,kod,hip,gas];
 
 function mount(c,f,ph,mov){
   const leg=mov?Math.sin(ph)*.5:0,rot=ph*1.3;
@@ -452,10 +487,17 @@ function mount(c,f,ph,mov){
     poly(c,[-10,-12,12,-12,18,-19,14,-21,8,-16,-8,-17],'#3a3a3a');
     c.fillStyle='#7a2626';c.beginPath();c.ellipse(4,-18,7,4,0,0,7);c.fill();c.fillStyle='rgba(255,255,255,.35)';c.beginPath();c.ellipse(2,-19.5,3,1.2,0,0,7);c.fill();
     line(c,14,-21,11,-29,2,'#222');circ(c,19,-19,2.6,'#ffe9a0');line(c,-10,-9,-15,-11,2,'#999');
-  }else{ // hulajnoga elektryczna
+  }else if(f==3){ // hulajnoga elektryczna
     wheel(c,-14,-4,4,rot,'#333','#111');wheel(c,16,-4,4,rot,'#333','#111');
     c.fillStyle='#2a2d33';c.beginPath();c.roundRect(-16,-9,30,4,2);c.fill();c.fillStyle='#4adfa0';c.fillRect(-12,-6,20,1);
     line(c,13,-8,18,-40,2.6,'#2a2d33');line(c,14,-40,22,-41,2.6,'#2a2d33');circ(c,18.5,-30,1.6,'#e8f8ff');
+  }else{ // koń husarski
+    for(const[lx,o]of[[-12,0],[-7,Math.PI],[9,Math.PI],[14,0]])line(c,lx,-14,lx+Math.sin(leg+o)*5,-1,3.4,'#c0cbdc');
+    c.fillStyle=lg(c,0,-30,0,-10,'#ffffff','#c0cbdc');c.beginPath();c.ellipse(0,-20,20,9,0,0,7);c.fill();
+    poly(c,[12,-25,21,-42,28,-40,20,-20],'#ffffff');
+    c.save();c.translate(24,-43);c.rotate(.45);c.fillStyle='#ffffff';c.beginPath();c.roundRect(-4,-5,18,10,4);c.fill();c.fillStyle='#c0cbdc';c.fillRect(10,-3,4,7);c.restore();
+    poly(c,[13,-26,20,-45,16,-46,10,-28],'#5a6988');poly(c,[19,-46,21,-52,23,-46],'#ffffff');line(c,-19,-22,-25,-10,3,'#5a6988');circ(c,27,-44,1.3,'#181425');
+    c.fillStyle='#a22633';c.fillRect(-9,-30,15,8);c.fillStyle='#feae34';c.fillRect(-9,-23,15,1.5);
   }
 }
 function cartBase(c,rot){
@@ -491,11 +533,20 @@ function siege(c,f,ph,mov,at){
     circ(c,34+kick*4,-24,3,'#c9a72a');
     wheel(c,-14,-11,11,rot,'#2a2a2a','#111');circ(c,-14,-11,4.5,'#f2c230');wheel(c,12,-9,9,rot,'#2a2a2a','#111');circ(c,12,-9,3.5,'#f2c230');
   }
+  if(f==4){ // wóz strażacki prawdy
+    c.fillStyle=lg(c,0,-38,0,-12,'#e43b44','#a22633');c.beginPath();c.roundRect(-34,-36,48,24,3);c.fill();
+    c.fillStyle='#be4a2f';c.beginPath();c.roundRect(14,-40,18,28,[6,3,2,2]);c.fill();c.fillStyle='rgba(190,230,255,.6)';c.fillRect(20,-37,10,9);
+    c.fillStyle='#ffffff';c.fillRect(-34,-22,66,3);
+    line(c,-30,-38,12,-52,2,'#c0cbdc');line(c,-30,-42,12,-56,2,'#c0cbdc');for(let i=0;i<6;i++){const q=i/5;line(c,-30+42*q,-38-14*q,-30+42*q,-42-14*q,1.5,'#c0cbdc')}
+    c.save();c.translate(4,-38);c.rotate(-.4-kick*.2);c.fillStyle='#3a4466';c.fillRect(0,-2,16,4);c.restore();
+    circ(c,24,-42,2.2,Math.sin(ph*3)>0?'#0099db':'#e43b44');
+    wheel(c,-24,-10,7,rot,'#2a2a2a','#111');wheel(c,-4,-10,7,rot,'#2a2a2a','#111');wheel(c,22,-10,7,rot,'#2a2a2a','#111');
+  }
 }
 function drawUnit(c,f,k,x,y,d,ph,mov,at,s=1){
   c.save();c.translate(x,y);c.scale(d*s,s);
   c.fillStyle='rgba(0,0,0,.32)';c.beginPath();c.ellipse(k=='siege'&&f>0?-4:0,0,k=='siege'?32:k=='heavy'?24:f==0?14:11,3.5,0,0,7);c.fill();
-  if(k=='heavy'){mount(c,f,ph,mov);const o=[[-3,-14],[-1,1],[-2,-4],[-1,-8]][f];c.save();c.translate(...o);FIG[f](c,f,'lance',ph,false,at,f!=3);c.restore()}
+  if(k=='heavy'){mount(c,f,ph,mov);const o=[[-3,-14],[-1,1],[-2,-4],[-1,-8],[-2,-12]][f];c.save();c.translate(...o);FIG[f](c,f,'lance',ph,false,at,f!=3);c.restore()}
   else if(k=='siege')siege(c,f,ph,mov,at);
   else FIG[f](c,f,k,ph,mov,at,false);
   c.restore();
@@ -523,7 +574,7 @@ function bust(c,f,x,y,s,t){
     c.fillStyle='#d4d4da';c.beginPath();c.ellipse(-7,-44,5,8,-.3,0,7);c.fill();c.beginPath();c.ellipse(7,-44,5,8,.3,0,7);c.fill();c.beginPath();c.ellipse(0,-50,9,3,0,0,7);c.fill();
     circ(c,-4,-40,1.3,'#222');circ(c,4,-40,1.3,'#222');line(c,-7,-44,-2,-43,1.5,'#9a9aa2');line(c,2,-43,7,-44,1.5,'#9a9aa2');
     c.fillStyle='#c9c4bd';c.beginPath();c.moveTo(-12,-30);c.quadraticCurveTo(-8,-38,0,-35);c.quadraticCurveTo(8,-38,12,-30);c.quadraticCurveTo(8,-31,0,-31);c.quadraticCurveTo(-8,-31,-12,-30);c.fill();
-  }else{ // Pan z Brukseli: zaczesana siwizna, szeroki uśmiech, krawat w gwiazdki, euro
+  }else if(f==3){ // Pan z Brukseli: zaczesana siwizna, szeroki uśmiech, krawat w gwiazdki, euro
     c.fillStyle=lg(c,-22,0,22,0,'#1f2b4a','#2f3f68','#1f2b4a');c.beginPath();c.moveTo(-23,0);c.quadraticCurveTo(-22,-20,-9,-24);c.lineTo(9,-24);c.quadraticCurveTo(22,-20,23,0);c.fill();
     c.fillStyle='#fdfbf4';c.beginPath();c.moveTo(-6,-24);c.lineTo(0,-14);c.lineTo(6,-24);c.fill();
     c.fillStyle='#2f4f9a';c.beginPath();c.moveTo(-2,-22);c.lineTo(2,-22);c.lineTo(3,-6);c.lineTo(0,-3);c.lineTo(-3,-6);c.fill();circ(c,0,-16,.9,'#f2c230');circ(c,0,-10,.9,'#f2c230');
@@ -532,6 +583,16 @@ function bust(c,f,x,y,s,t){
     circ(c,-4,-40,1.3,'#222');circ(c,4,-40,1.3,'#222');
     c.fillStyle='#fff';c.beginPath();c.moveTo(-6,-32);c.quadraticCurveTo(0,-26,6,-32);c.closePath();c.fill();line(c,-6,-32,6,-32,1,'#a05050');
     circ(c,17,-6,6,'#f2c230');circ(c,17,-6,3,'#d77643');
+  }else{ // Poseł z Gaśnicą: garnitur, broda, okulary, gaśnica w górze
+    c.fillStyle=lg(c,-22,0,22,0,'#181425','#262b44','#181425');c.beginPath();c.moveTo(-23,0);c.quadraticCurveTo(-22,-20,-9,-24);c.lineTo(9,-24);c.quadraticCurveTo(22,-20,23,0);c.fill();
+    c.fillStyle='#ffffff';c.beginPath();c.moveTo(-6,-24);c.lineTo(0,-14);c.lineTo(6,-24);c.fill();poly(c,[-2,-22,2,-22,3,-6,0,-3,-3,-6],'#e43b44');
+    c.fillStyle='#efc4a0';c.beginPath();c.ellipse(0,-38,10,12,0,0,7);c.fill();
+    c.fillStyle='#3e2731';c.beginPath();c.ellipse(-1,-48.5,10,4.5,-.1,0,7);c.fill();c.fillRect(-10,-48,3,8);
+    c.fillStyle='#5a4a42';c.beginPath();c.moveTo(-9.5,-36);c.quadraticCurveTo(0,-20,9.5,-36);c.lineTo(7,-33);c.quadraticCurveTo(0,-27,-7,-33);c.fill();
+    line(c,-7,-44,-2,-42.5,1.6,'#3e2731');line(c,2,-42.5,7,-44,1.6,'#3e2731');
+    c.strokeStyle='#181425';c.lineWidth=1.1;c.beginPath();c.arc(-4,-40,2.8,0,7);c.moveTo(6.8,-40);c.arc(4,-40,2.8,0,7);c.stroke();line(c,-1.2,-40,1.2,-40,1,'#181425');
+    c.fillStyle=lg(c,14,0,24,0,'#a22633','#e43b44','#a22633');c.beginPath();c.roundRect(14,-46,10,30,4);c.fill();c.fillStyle='#181425';c.fillRect(16,-50,6,4);
+    line(c,19,-50,12,-60,2,'#181425');for(const[fx,fy,r]of[[10,-62,3],[6,-66,2.5],[12,-68,2.5],[4,-71,2]])circ(c,fx,fy,r,'#ffffff');
   }
   c.restore();
 }
@@ -650,7 +711,7 @@ function castle(c,S,t,s){
     label(x,b-117,'§ DEMOKRACJA §',F.col,'small');
     c.fillStyle='#2b2a30';c.beginPath();c.roundRect(x-9,b-46,18,28,[9,9,0,0]);c.fill();glow(c,x,b-34,24,.4);
     banner(c,x,b-136,F.col,t,d,F.sigil,28);plate(c,x,b-200,F.city,F.col);
-  }else{ // szklany biurowiec dotacji + silos
+  }else if(S.f==3){ // szklany biurowiec dotacji + silos
     c.fillStyle=lg(c,0,b-70,0,b,'#b8bec6','#7d848e');c.beginPath();c.roundRect(x+40*d-14,b-90,28,90,[14,14,0,0]);c.fill();
     for(let y=b-80;y<b;y+=12)line(c,x+40*d-14,y,x+40*d+14,y,1,'rgba(0,0,0,.18)');
     const gx=x-10*d-5;
@@ -661,6 +722,17 @@ function castle(c,S,t,s){
     for(let i=0;i<12;i++){const a=i/12*Math.PI*2;c.fillStyle='#fee761';c.fillRect(gx+3.5+Math.cos(a)*11,b-181.5+Math.sin(a)*11,3,3)}
     c.fillStyle='#e3c15e';for(let i=0;i<3;i++){c.beginPath();c.roundRect(x-60*d+i*12*d-6,b-12,12,12,4);c.fill()}
     banner(c,gx+5,b-162,F.col,t,d,F.sigil,24);plate(c,gx+5,b-210,F.city,F.col);
+  }else{ // dworek z pomnikiem gaśnicy
+    poly(c,[x-60,b-58,x-40,b-94,x+40,b-94,x+60,b-58],'#733e39');
+    c.fillStyle=lg(c,0,b-60,0,b,'#ead4aa','#e4a672');c.fillRect(x-52,b-60,104,60);
+    for(const wx of[-42,-30,22,34]){c.fillStyle='#feae34';c.fillRect(x+wx,b-46,8,12);c.fillStyle='#ffffff';c.fillRect(x+wx+3.5,b-46,1,12)}
+    poly(c,[x-26,b-58,x,b-80,x+26,b-58],'#ffffff');for(let i=0;i<4;i++){c.fillStyle='#ffffff';c.fillRect(x-20+i*12,b-58,5,52)}
+    c.fillStyle='#3e2731';c.fillRect(x-6,b-26,12,26);c.fillStyle='#c0cbdc';c.fillRect(x-30,b-6,60,6);
+    const mx=x+76*d;c.fillStyle='#8b9bb4';c.fillRect(mx-14,b-20,28,20);c.fillStyle='#c0cbdc';c.fillRect(mx-16,b-24,32,5);
+    c.fillStyle=lg(c,mx-11,0,mx+11,0,'#a22633','#e43b44','#a22633');c.beginPath();c.roundRect(mx-11,b-86,22,62,9);c.fill();
+    c.fillStyle='#181425';c.fillRect(mx-5,b-94,10,8);c.fillStyle='#ead4aa';c.fillRect(mx-7,b-66,14,12);
+    line(c,mx+4,b-92,mx+20,b-80,3,'#181425');line(c,mx+20,b-80,mx+22,b-60,3,'#181425');
+    banner(c,x,b-94,F.col,t,d,F.sigil,26);plate(c,x,b-168,F.city,F.col);
   }
 }
 function fort(c,S,t,s){
@@ -677,16 +749,19 @@ function fort(c,S,t,s){
       line(c,x-22,b,x-8,b-70,3,'#7a5a3a');line(c,x+22,b,x+8,b-70,3,'#7a5a3a');line(c,x-20,b-30,x+20,b-30,3,'#7a5a3a');
       const signs=[['NIE!',-14,-22],['§',10,-24],['VETO',-6,-48],['STOP',10,-66],['?!',-12,-74]];
       signs.slice(0,n(signs.length)).forEach(([tx,ox,oy],i)=>{c.save();c.translate(x+ox,b+oy);c.rotate((i%2?.12:-.1)*(r<.5?2:1));c.fillStyle='#fdfbf4';c.fillRect(-12,-9,24,18);c.strokeStyle=F.col;c.lineWidth=2;c.strokeRect(-12,-9,24,18);c.restore();label(x+ox,b+oy,tx,i%2?'#124e89':'#a22633','tiny')});
-    }else{ // bele siana i segregatory
+    }else if(S.f==3){ // bele siana i segregatory
       const bales=[[-13,-9],[13,-9],[-13,-29],[13,-29],[0,-49]];
       bales.slice(0,n(5)).forEach(([ox,oy])=>{c.fillStyle=lg(c,0,b+oy-10,0,b+oy+10,'#efd27a','#c9a23e');c.beginPath();c.roundRect(x+ox-12,b+oy-10,24,20,6);c.fill();line(c,x+ox-12,b+oy-3,x+ox+12,b+oy-3,1,'rgba(120,80,20,.5)');line(c,x+ox-12,b+oy+4,x+ox+12,b+oy+4,1,'rgba(120,80,20,.5)')});
       if(r>.4)['#c0392b','#2f4f9a','#2e7d32','#f2c230'].forEach((col,i)=>{c.fillStyle=col;c.fillRect(x-10+i*5,b-80,4.5,20);c.fillStyle='#fff';c.fillRect(x-9+i*5,b-72,2.5,3)});
       c.fillStyle='#fdfbf4';c.fillRect(x+14,b-78,26,14);line(c,x+20,b-64,x+20,b-50,1.5,'#7a5a3a');label(x+27,b-71,'B-12','#124e89','tiny');
+    }else{ // barykada z gaśnic
+      const ex=[[-14,0],[0,0],[14,0],[-7,-26],[7,-26],[0,-52]];
+      ex.slice(0,n(ex.length)).forEach(([ox,oy])=>{c.fillStyle=lg(c,x+ox-6,0,x+ox+6,0,'#a22633','#e43b44','#a22633');c.beginPath();c.roundRect(x+ox-6,b+oy-24,12,24,4);c.fill();c.fillStyle='#181425';c.fillRect(x+ox-2,b+oy-28,4,4);c.fillStyle='#ead4aa';c.fillRect(x+ox-4,b+oy-16,8,5)});
     }
     if(r<.5&&Math.random()<.05)G.parts.push({x:x+rnd(-15,15),y:b-60,vx:rnd(-5,5),vy:-10,life:1.4,max:1.4,col:'rgba(70,60,60,.45)',size:rnd(6,12),type:'smoke'});
-    banner(c,x,b-(S.f==1?92:S.f==3?62:S.f==2?78:96),F.col,t,d,F.sigil,20);
+    banner(c,x,b-(S.f==1?92:S.f==3?62:S.f==2?78:S.f==4?80:96),F.col,t,d,F.sigil,20);
   }else{
-    const col=['#5a3a1e','#6e6a82','#d9d4c8','#c9a23e'][S.f];
+    const col=['#5a3a1e','#6e6a82','#d9d4c8','#c9a23e','#a22633'][S.f];
     for(const[ox,oy,rr]of[[-16,-6,9],[-4,-10,11],[10,-7,10],[20,-4,7],[-24,-3,6]]){c.fillStyle=col;c.beginPath();c.ellipse(x+ox,b+oy,rr,rr*.6,ox,0,7);c.fill()}
     c.fillStyle='rgba(0,0,0,.2)';c.beginPath();c.ellipse(x,b-2,28,4,0,0,7);c.fill();
   }
@@ -729,8 +804,8 @@ function draw(){
   }
   for(const v of G.vis){const k=v.t/v.dur;
     if(v.type=='flash'){const g=F.createRadialGradient(v.x,FLOOR-10,4,v.x,FLOOR-10,90);g.addColorStop(0,`rgba(254,231,97,${1-k})`);g.addColorStop(1,'rgba(247,118,34,0)');F.fillStyle=g;F.fillRect(v.x-90,FLOOR-100,180,180);continue}
-    const x=v.x0+(v.x1-v.x0)*k,y=v.y0+(v.y1-v.y0)*k-Math.sin(k*Math.PI)*(v.type=='boulder'||v.type=='water'?60:22);
-    if(v.type=='water'){for(let i=0;i<8;i++){const q=Math.max(0,k-i*.05);circ(F,v.x0+(v.x1-v.x0)*q,v.y0+(v.y1-v.y0)*q-Math.sin(q*Math.PI)*60,5-i*.4,i%2?'#0099db':'#2ce8f5')}}
+    const x=v.x0+(v.x1-v.x0)*k,y=v.y0+(v.y1-v.y0)*k-Math.sin(k*Math.PI)*(v.type=='boulder'||v.type=='water'||v.type=='foam'?60:22);
+    if(v.type=='water'||v.type=='foam'){const fo=v.type=='foam';for(let i=0;i<8;i++){const q=Math.max(0,k-i*.05);circ(F,v.x0+(v.x1-v.x0)*q,v.y0+(v.y1-v.y0)*q-Math.sin(q*Math.PI)*60,(fo?6:5)-i*.4,fo?(i%2?'#c0cbdc':'#ffffff'):(i%2?'#0099db':'#2ce8f5'))}}
     else if(v.type=='folder'){c.save();c.translate(x,y);c.rotate(k*14);c.fillStyle='#b86f50';c.fillRect(-6,-4,12,8);c.fillStyle='#ead4aa';c.fillRect(-3,-2,6,3);c.restore()}
     else if(v.type=='cup'){c.save();c.translate(x,y);c.rotate(k*10);c.fillStyle='#ffffff';c.fillRect(-4,-5,8,10);c.fillStyle='#733e39';c.fillRect(-4,-1,8,3);c.restore()}
     else if(v.type=='boulder'){circ(c,x,y,6,'#5a6988');circ(c,x-2,y-2,2.5,'#8b9bb4')}
@@ -797,9 +872,9 @@ function menu(){G=null;$('#end').hidden=true;$('#game').hidden=true;$('#brief').
 function showBrief(){
   $('#end').hidden=true;$('#start').hidden=true;$('#game').hidden=true;$('#brief').hidden=false;
   const e=camp.order[camp.m];
-  $('#briefNo').textContent=`Misja ${camp.m+1} z 3`;$('#briefTitle').textContent=FAC[e].city;
+  $('#briefNo').textContent=`Misja ${camp.m+1} z ${camp.order.length}`;$('#briefTitle').textContent=FAC[e].city;
   $('#briefText').textContent=FAC[e].brief;
-  $('#briefNo').textContent=`Misja ${camp.m+1} z 3 · ${FAC[camp.me].leader.name} kontra ${FAC[e].leader.name}`;
+  $('#briefNo').textContent=`Misja ${camp.m+1} z ${camp.order.length} · ${FAC[camp.me].leader.name} kontra ${FAC[e].leader.name}`;
   pxArt($('#briefArt'),(x,w,h)=>{const g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#262b44');g.addColorStop(.45,'#68386c');g.addColorStop(.7,'#f6757a');g.addColorStop(.71,'#3e8948');g.addColorStop(1,'#265c42');x.fillStyle=g;x.fillRect(0,0,w,h)},c=>{
     bust(c,camp.me,70,150,1.7,0);c.save();c.translate(350,0);c.scale(-1,1);bust(c,e,0,150,1.7,0);c.restore();
     drawUnit(c,camp.me,'inf',150,128,1,1,true,9,1.2);drawUnit(c,e,'inf',270,128,-1,2,true,9,1.2);
@@ -872,7 +947,7 @@ $('#facs').innerHTML=FAC.map((f,o)=>`<button class="fc" style="--c:${f.col}" dat
 $('#facs').querySelectorAll('button').forEach(b=>{const o=+b.dataset.o;
   pxArt(b.querySelector('canvas'),(x,w,h)=>{const g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#262b44');g.addColorStop(.5,'#68386c');g.addColorStop(.74,'#f6757a');g.addColorStop(.75,'#3e8948');g.addColorStop(1,'#265c42');x.fillStyle=g;x.fillRect(0,0,w,h)},
     c=>{bust(c,o,34,76,.95,0);drawUnit(c,o,'inf',104,66,1,.3,true,9,1.25);drawUnit(c,o,'ranged',150,66,1,2.4,true,9,1.15)});
-  b.onclick=()=>{camp={me:o,m:0,order:[0,1,2,3].filter(x=>x!=o)};showBrief()}});
+  b.onclick=()=>{camp={me:o,m:0,order:FAC.map((_,i)=>i).filter(x=>x!=o)};showBrief()}});
 
 resize();
 // self-check: samotna piechota bez muru i wrogów musi dojść i zdobyć miasto
