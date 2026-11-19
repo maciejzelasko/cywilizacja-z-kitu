@@ -2,7 +2,7 @@
 
 Satyryczna gra strategiczna w czasie rzeczywistym w pixel arcie: dwa miasta na końcach przewijanej mapy, wojsko, farmy, kopalnie, mury i artyleria. Wygrywa ten, kto wprowadzi piechotę do miasta przeciwnika. Kampania to po jednej misji przeciw każdej z pozostałych frakcji.
 
-Frakcje: Orkowie, Kitowcy, Komitet Obrony Demokracji, Eurokołhoźnicy, Front Gaśnicowy, Pisiory, Feminazistki, Foliarze — każda z własnymi jednostkami, miastem, murem i przywódcą z umiejętnością specjalną.
+Frakcje: Kitowcy, Komitet Obrony Demokracji, Eurokołhoźnicy, Front Gaśnicowy, Pisiory, Feminazistki, Foliarze — każda z własnymi jednostkami, miastem, murem i przywódcą z umiejętnością specjalną.
 
 Cała gra to jeden plik: `cywilizacja-z-kitu.html` (czysty JavaScript + canvas, bez zależności).
 
