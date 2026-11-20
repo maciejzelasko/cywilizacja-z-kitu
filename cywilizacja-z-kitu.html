@@ -143,28 +143,28 @@ const FAC=[
  {name:'Orkowie',col:'#86c440',atk:1.25,perk:'WAAAGH! +25% obrażeń. Myślenie opcjonalne.',arty:'Katapulta z Kumplem',sigil:'⚒',
   units:{inf:'Chłopak z Toporem',ranged:'Goblin z Łukiem',heavy:'Jeździec na Dziku',siege:'Troll z Taranem'},
   city:'Błotogród',leader:{name:'Władca Oka',abil:'Spojrzenie Oka',desc:'+50% obrażeń całej armii na 10 s',quote:'Oko widzi wszystko. Zwłaszcza twój mur.'},brief:'Orkowie stoją za rzeką. Mają topory, dziki i zero planu. Brak planu to ich jedyna słabość, za to ogromna.'},
- {name:'Kitowcy',col:'#b9b3c9',costMul:.7,perk:'Produkcja masowa: jednostki 30% taniej. Giną równie masowo.',arty:'Wielki Gumowy Głaz',sigil:'◆',
+ {name:'Kitowcy',col:'#b9b3c9',costMul:.9,hpMul:.85,perk:'Produkcja masowa: jednostki 10% taniej, ale mają 15% mniej życia. Giną masowo.',arty:'Wielki Gumowy Głaz',sigil:'◆',
   units:{inf:'Kitowiec Szeregowy',ranged:'Kitowiec z Kamieniem',heavy:'Kitowiec na Motorynce',siege:'Gumowy Taran'},
   city:'Kamieniołom B',leader:{name:'Księżycowa Wiedźma',abil:'Rośnij!',desc:'najdalej wysunięta jednostka staje się olbrzymem',quote:'Zróbcie mi tu potwora! Dużego!'},brief:'Kitowcy nadciągają w liczbie przekraczającej budżet odcinka. Każdy pada od jednego kopniaka. Kopnij wszystkich.'},
- {name:'Komitet Obrony Demokracji',col:'#4f8fe0',wallMul:1.5,perk:'Bronimy! Mur ma +50% wytrzymałości. Doświadczenie od lat 80.',arty:'Megafon Dalekiego Zasięgu',sigil:'§',
+ {name:'Komitet Obrony Demokracji',col:'#4f8fe0',wallMul:1.75,hpMul:1.1,perk:'Bronimy! Mur +75% wytrzymałości, jednostki +10% życia. Doświadczenie od lat 80.',arty:'Megafon Dalekiego Zasięgu',sigil:'§',
   units:{inf:'Zomowiec z Pałą',ranged:'Stary Ubek z Teczką',heavy:'Ormowiec na WSK-ce',siege:'Armatka Wodna'},
-  city:'Wolnogród',leader:{name:'TW Bolek',abil:'Strajk!',desc:'wróg staje na 5 s, jego dochód na 12 s',quote:'Jestem za, a nawet przeciw!'},brief:'Komitet okopał się za barykadą. W szeregach weterani z doświadczeniem od lat 80.: zomowcy z pałami, ormowcy na WSK-ach i starzy ubecy z teczką na każdego. Mur wytrzyma o połowę więcej.'},
- {name:'Eurokołhoźnicy',col:'#f2c230',incMul:1.3,perk:'Dopłaty: +30% dochodu. Formularz w 12 kopiach.',arty:'Ostrzał Dyrektywami',sigil:'★',
+  city:'Wolnogród',leader:{name:'TW Bolek',abil:'Strajk!',desc:'wróg staje na 5 s, jego dochód na 12 s',quote:'Jestem za, a nawet przeciw!'},brief:'Komitet okopał się za barykadą. W szeregach weterani z doświadczeniem od lat 80.: zomowcy z pałami, ormowcy na WSK-ach i starzy ubecy z teczką na każdego. Mur wytrzyma o trzy czwarte więcej.'},
+ {name:'Eurokołhoźnicy',col:'#f2c230',incMul:1.1,perk:'Dopłaty: +10% dochodu. Formularz w 12 kopiach.',arty:'Ostrzał Dyrektywami',sigil:'★',
   units:{inf:'Hipster z Kijkiem do Selfie',ranged:'Klientka z Latte na Wynos',heavy:'Korpo na Hulajnodze',siege:'Kombajn Biurokracji'},
   city:'Brukselka',leader:{name:'Pan z Brukseli',abil:'Fundusze Unijne',desc:'+150 do skarbca i leczenie armii',quote:'Pieniądze są. Wnioski też będą.'},brief:'Eurokołhoźnicy finansują armię z dopłat. Prosto z kawiarni ruszają hipsterzy z kijkami do selfie i klientki z latte na owsianym, po trzecim flat white. Dochód rośnie szybciej niż kolejka po kawę.'},
- {name:'Front Gaśnicowy',col:'#e43b44',artyRes:.5,perk:'Wszystko zgaszone: wroga artyleria zadaje o połowę mniej obrażeń.',arty:'Ostrzał Pianą',sigil:'!',
+ {name:'Front Gaśnicowy',col:'#e43b44',artyRes:.7,perk:'Wszystko zgaszone: wroga artyleria zadaje o 30% mniej obrażeń.',arty:'Ostrzał Pianą',sigil:'!',
   units:{inf:'Gaśniczy z Gaśnicą',ranged:'Ochotnik z Pianą',heavy:'Husarz z Gaśnicą',siege:'Wóz Strażacki Prawdy'},
   city:'Gaśnicowo',leader:{name:'Poseł z Gaśnicą',abil:'Wielkie Gaszenie',desc:'piana na froncie: 25 obrażeń wrogom i +20 s do ich artylerii',quote:'Wszystko jest prowokacją!'},
   brief:'Front Gaśnicowy gasi wszystko, co się świeci: ogniska, latarnie, choinki i dobry nastrój. Husaria jeździ z gaśnicami, a wóz strażacki tryska pianą prawdy. Ich miasto jest w pełni ognioodporne, ich przywódca też.'},
- {name:'Pisiory',col:'#f77622',infHp:1.3,perk:'Żelazny elektorat: Mocherowe Berety mają +30% życia.',arty:'Paski Grozy',sigil:'P',
+ {name:'Pisiory',col:'#f77622',infHp:1.4,hpMul:1.15,perk:'Żelazny elektorat: jednostki +15% życia, Mocherowe Berety aż +60%.',arty:'Paski Grozy',sigil:'P',
   units:{inf:'Mocherowy Beret',ranged:'Działacz z Ulotkami',heavy:'Rządowa Kolumna',siege:'Wóz TV Rzepublika'},
   city:'Nowogrodzka',leader:{name:'Prezes z Kotem',abil:'Orędzie',desc:'wróg słucha i cofa się przez 4 s',quote:'Ja tu decyduję, a nie żaden sondaż!'},
   brief:'Pisiory bronią Nowogrodzkiej zza barierek. Na pierwszej linii mocherowe berety z parasolkami, za nimi działacze z ulotkami i rządowa kolumna, a na tyłach wóz telewizji, która mówi prawdę głośniej niż wszyscy.'},
- {name:'Feminazistki',col:'#b55088',speedMul:1.2,perk:'Masa krytyczna: wszystkie jednostki szybsze o 20%.',arty:'Wielki Megafon',sigil:'♀',
+ {name:'Feminazistki',col:'#b55088',speedMul:1.2,hpMul:1.15,perk:'Masa krytyczna: jednostki szybsze o 20% i mają +15% życia.',arty:'Wielki Megafon',sigil:'♀',
   units:{inf:'Aktywistka z Transparentem',ranged:'Korektorka Feminatywów',heavy:'Rowerzystka Masy Krytycznej',siege:'Platforma Protestu'},
   city:'Manifestowo',leader:{name:'Przewodnicząca Strajku',abil:'Siostrzeństwo',desc:'cała armia leczy się do pełna',quote:'Nie ma zgody na brak zgody!'},
   brief:'Feminazistki wyruszają z Manifestowa całą masą krytyczną. Korektorki poprawiają końcówki w rozkazach wroga, rowerzystki blokują skrzyżowania, a platforma protestu gra tak głośno, że mury same się poddają.'},
- {name:'Foliarze',col:'#2ce8f5',regen:2,perk:'Odporność naturalna: jednostki same się leczą (2 HP/s).',arty:'Chemtrailsy',sigil:'△',
+ {name:'Foliarze',col:'#2ce8f5',regen:3,perk:'Odporność naturalna: jednostki same się leczą (3 HP/s).',arty:'Chemtrailsy',sigil:'△',
   units:{inf:'Pan w Czapce z Folii',ranged:'Zielarka z Olejkami',heavy:'Kamper z Anteną',siege:'Wieża Anty-5G'},
   city:'Foliowo',leader:{name:'Doktor z YouTube',abil:'Własne Badania',desc:'przez 8 s wrogie pociski i artyleria nie trafiają',quote:'Zrób własne badania!'},
   brief:'Foliarze wychodzą z Foliowa, bo wahadełko tak wskazało. Czapki z folii odbijają fale, olejki leczą wszystko poza rachunkami, a Wieża Anty-5G zagłusza wroga tak skutecznie, że nikt nie ma zasięgu — oni też nie.'}];
@@ -193,7 +193,7 @@ const reload=s=>Math.max(6,20-4*G.pts.filter(p=>p.owner==s&&p.type=='mine').leng
 function spawn(s,k){
   const S=G.S[s],c=cost(S.f,k);
   if(S.gold<c||G.units.filter(u=>u.s==s).length>=40)return false;
-  S.gold-=c;const mh=KIND[k].hp*(k=='inf'&&FAC[S.f].infHp||1);G.units.push({id:G.uid++,s,k,x:S.cityX+dirOf(s)*40,hp:mh,max:mh,cd:0,lane:(G.uid*37)%34,ph:Math.random()*6,at:9,mov:false});
+  S.gold-=c;const mh=KIND[k].hp*(k=='inf'&&FAC[S.f].infHp||1)*(FAC[S.f].hpMul||1);G.units.push({id:G.uid++,s,k,x:S.cityX+dirOf(s)*40,hp:mh,max:mh,cd:0,lane:(G.uid*37)%34,ph:Math.random()*6,at:9,mov:false});
   return true;
 }
 function fireArty(s,x){
@@ -1106,7 +1106,7 @@ let ctl=[];
 function buildControls(){
   const f=camp.me,box=$('#controls');box.innerHTML='';ctl=[];
   KEYS.forEach((k,i)=>{const b=document.createElement('button');b.className='uc';b.style.setProperty('--c',FAC[f].col);
-    b.innerHTML=`<canvas class="pt" width="32" height="28"></canvas><div class="tx"><b>${FAC[f].units[k]}</b><small>💰 ${cost(f,k)} · ⚔ ${KIND[k].dmg} · ❤ ${KIND[k].hp}</small></div><span class="key">${i+1}</span><i class="bar"></i>`;
+    b.innerHTML=`<canvas class="pt" width="32" height="28"></canvas><div class="tx"><b>${FAC[f].units[k]}</b><small>💰 ${cost(f,k)} · ⚔ ${KIND[k].dmg} · ❤ ${Math.round(KIND[k].hp*(k=='inf'&&FAC[f].infHp||1)*(FAC[f].hpMul||1))}</small></div><span class="key">${i+1}</span><i class="bar"></i>`;
     portrait(b.querySelector('canvas'),f,k);b.onclick=()=>spawn(0,k);box.append(b);ctl.push([b,k])});
   const a=document.createElement('button');a.className='uc';a.id='arty';
   a.innerHTML=`<canvas class="pt" width="32" height="28"></canvas><div class="tx"><b>${FAC[f].arty}</b><small id="artyTxt"></small></div><span class="key">Q</span><i class="bar"></i>`;
