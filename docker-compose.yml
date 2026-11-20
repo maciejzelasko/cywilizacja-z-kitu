@@ -2,6 +2,7 @@ services:
   cywilizacja:
     build: .
     image: cywilizacja-z-kitu:latest
+    pull_policy: build  # Portainer: zawsze przebuduj z repo przy redeployu
     ports:
       - "8080:80"
     restart: unless-stopped
